@@ -1,0 +1,79 @@
+.TH OPTBOT 1 LOCAL
+.SH NAME
+optbot - parse command line options
+
+.SH SYNOPSIS
+.B optbot [ -a
+.I argument_description
+.B ] --
+.I given_arguments
+
+.SH DESCRIPTION
+.B optbot
+allows parsing of command line options given to a shell script.  It does this
+by utilizing
+.BR liboptbot (1)
+to handle argument descriptions given with
+.B -a
+options.  Options given after the
+.B --
+flag are treated as parameters to be parsed according to the given argument
+descriptions.  If the given parameters are acceptable, assignments are
+output to STDOUT as shell code for evaluation in the context in which
+they will be used.  Error messages are printed to STDERR for any parsing
+failures.
+
+.IP given_arguments
+These are the flags passed to the calling script.  These will usually be given
+via
+.B $@
+\.
+
+.SH OPTIONS
+
+.IP "-a, --add_arg argument_description"
+Add an argument descriptor.  This should be a comma seperated list of
+four elements.
+.IP 1.
+The short option name
+.IP 2.
+The long option name
+.IP 3.
+The description of the option. Used for generating help output.
+.IP 4.
+"true" or "false" value,
+determining whether or not this option takes values
+.IP
+Any of the first three options may be left blank.
+
+.IP "-p, --prefix varaible_prefix"
+The prefix that should be prepended to the variables assigned in this
+script's output.  Must be shorter than 16 characters.
+
+.IP "-h, --help"
+Prints help
+
+.IP "-d, --delimiter"
+The character used to seperate arguments to --add-arg.  "," by default.
+
+.IP "-f, --fail_var"
+Prints <prefix>_success=false; on failure.  Can be used to check the success of
+the script if -e is not specified.
+
+.IP "-e, --exit_on_failure"
+Causes an exit command to be printed on failure.  Should be used to cease
+termination of the calling script with nonzero status.
+
+.SH EXAMPLES
+
+.IP
+.B eval `optbot -av,verbose,"Should this script run in verbose mode?",false -- -v`
+.IP
+This will set $arg_verbose to true in the calling script.
+
+.IP
+.B eval `optbot -af,file,"Add an output file",true -- -f one.txt --file two.txt`
+.IP
+This will set $arg_file to the first given argument, one.txt in this case.
+$arg_file_n will be set to the number of given arguments, 2 in this case.
+$arg_file_1 and $arg_file_2 will be set to one.txt and two.txt, respectively.
