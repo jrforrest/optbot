@@ -23,15 +23,15 @@ runs (or is POSIX compliant) check out test.sh
 eval `optbot \
   -a v,verbose,"enable verbose output",false \
   -a f,file,"add an output file",true \
-  -a l,logfile,"The logfile to use.  Only the first given is utilized",true
-  -p cliopt_ -e
+  -a l,logfile,"The logfile to use.  Only the first given is utilized",true \
+  -p cliopt_ -e \
   -- $@
 `
 
-[ -z "$cliopt_logfile ] && cliopt_logfile='log.txt'
+[ -z "$cliopt_logfile" ] && cliopt_logfile=log.txt
 
 echo "starting output" > $cliopt_logfile
-[ $cliopt_verbose = true ] && echo "starting output"
+[ "$cliopt_verbose" = true ] && echo "starting output"
 # Do we have any files to operate on?
 [ -z "$cliopt_file" ] && exit 0
 
@@ -44,7 +44,7 @@ seq 1 $cliopt_file_n | while read i; do
 done
 
 echo "done" > $cliopt_logfile
-[ $cliopt_verbose = true ] && echo "done"
+[ "$cliopt_verbose" = true ] && echo "done"
 ```
 
 Calling this script with `./script.sh -f file_one.txt --file file_two.txt
