@@ -81,6 +81,14 @@ void export_arg(struct cli_arg* arg, char* prefix) {
   }
 }
 
+void export_argv(struct cli_arg_list* parse_list, char* prefix) {
+  int i;
+  if(!prefix) prefix = "arg_";
+  for(i = 1; i < parse_list->argc; i++)
+    printf("%sargv_%d=%s;", prefix, i, parse_list->argv[i]);
+  printf("%sargc=%d;", prefix, parse_list->argc - 1);
+}
+
 int main(int argc, const char** argv) {
   struct cli_arg_list* arg_list = init_cli_arg_list();
   struct cli_arg_list* parse_list = init_cli_arg_list();
@@ -191,6 +199,8 @@ int main(int argc, const char** argv) {
     print_help(parse_list);
     goto error;
   }
+
+  export_argv(parse_list, prefix);
 
   for(i = 0; i < arg->values_length; i++)
     export_arg(little_opt_arg(parse_list, argp[i]->little), prefix);

@@ -39,6 +39,15 @@ test_values() {
 }
 test_values -a one -a two
 
+test_argv() {
+  eval `$optbot -aa,opt_a,"engages hypnotoad",true -- $@`
+  check_eq arg_argc 2
+  check_eq arg_opt_a beautiful
+  check_eq arg_argv_1 hello
+  check_eq arg_argv_2 world
+}
+test_argv hello -a beautiful world
+
 test_help() {
   $optbot -aa,opt_a,"does great things",true -- $@ 2>&1 |
     if ! grep -q "does great things"; then

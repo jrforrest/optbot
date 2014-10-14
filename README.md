@@ -12,6 +12,8 @@ Allows access to almost all liboptbot features from your shell scripts
 * Exports values given into environment variables when eval'd
 * Automatic help generation
 * Allows multiple uses of options, and access to all given values
+* Allows access to parameters not parsed as flags or
+  values to flags via argv and argc
 
 Examples
 --------
@@ -42,6 +44,16 @@ seq 1 $cliopt_file_n | while read i; do
   # shells.  See test.sh for an example.
   echo "Here's some output." >${!optfile_var}
 done
+
+# We can get arguments left over from the command line with the argc and argv
+# variables as well!
+#
+# This will parse out args on the command line which are not picked up as
+# flags or values passed to flags, or any arguments given after --
+seq 1 $cliopt_argc | while read i; do
+  argv_var=cliopt_argv_$i
+  echo "argv number $i set to ${!argv_var}"
+end
 
 echo "done" > $cliopt_logfile
 [ "$cliopt_verbose" = true ] && echo "done"
