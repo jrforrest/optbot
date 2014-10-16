@@ -41,6 +41,7 @@ struct arg_params* parse_arg_params(char* csv_string) {
   arg->little = str[0];
 
   str = strtok(NULL, ",");
+  validate(str, "Big opt must be given for args!")
   validate(strlen(str) >= 2,
     "String longer than 1 char expected for big opt, \"%s\" was given.", str);
   validate(strlen(str) <= 64,
@@ -48,8 +49,10 @@ struct arg_params* parse_arg_params(char* csv_string) {
   arg->big = str;
 
   arg->description = strtok(NULL, ",");
+  validate(arg->description, "Description must be given for args!");
 
   str = strtok(NULL, ",");
+  validate(str, "takes_value boolean must be given for args!");
   if(strcmp("true", str) == 0) {
     arg->takes_value = true;
   } else {
